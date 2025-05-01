@@ -76,6 +76,22 @@
       background-color: #4CAF50;
       color: white;
     }
+
+    #successMessage {
+      color: green;
+      font-size: 16px;
+      text-align: center;
+      margin-top: 15px;
+      display: none;
+    }
+
+    #errorMessage {
+      color: red;
+      font-size: 16px;
+      text-align: center;
+      margin-top: 15px;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -92,13 +108,18 @@
     </form>
 
     <ol id="signupList"></ol>
+    <div id="successMessage">Sign-up successful! Thank you for your participation.</div>
+    <div id="errorMessage">Please fill in both fields (Name and Team).</div>
   </div>
 
   <script>
     const form = document.getElementById('signupForm');
     const signupList = document.getElementById('signupList');
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
     
-    const pageKey = 'signups_workbee'; // Unique key for this page
+    // Change the unique storage key to 'workbee'
+    const pageKey = 'workbee'; // Unique key for this page
 
     let entries = [];
 
@@ -112,13 +133,23 @@
       const name = document.getElementById('name').value.trim();
       const team = document.getElementById('team').value.trim();
 
-      if (name && team) {
-        const entry = { name, team };
-        entries.push(entry);
-        localStorage.setItem(pageKey, JSON.stringify(entries)); // Uses pageKey
-        addEntryToDOM(entry);
-        form.reset();
+      // Handle empty fields
+      if (!name || !team) {
+        errorMessage.style.display = "block";
+        successMessage.style.display = "none";
+        return;
       }
+
+      // Clear any error message
+      errorMessage.style.display = "none";
+
+      const entry = { name, team };
+      entries.push(entry);
+      localStorage.setItem(pageKey, JSON.stringify(entries)); // Uses new pageKey
+      addEntryToDOM(entry);
+      form.reset();
+      successMessage.style.display = "block"; // Show success message
+      setTimeout(() => successMessage.style.display = "none", 3000); // Hide success message after 3 seconds
     });
 
     function addEntryToDOM(entry) {
@@ -131,7 +162,7 @@
       const password = prompt("Enter admin password to reset:");
       if (password === "admin123") {
         if (confirm("Are you sure you want to clear all sign-ups?")) {
-          localStorage.removeItem(pageKey); // Uses pageKey
+          localStorage.removeItem(pageKey); // Uses new pageKey
           signupList.innerHTML = '';
           entries = [];
           alert("Log cleared.");
