@@ -97,11 +97,12 @@
   <script>
     const form = document.getElementById('signupForm');
     const signupList = document.getElementById('signupList');
+    const pageKey = 'signups_closing'; // Unique key for this page
 
     let entries = [];
 
     window.onload = () => {
-      entries = JSON.parse(localStorage.getItem('signups')) || [];
+      entries = JSON.parse(localStorage.getItem(pageKey)) || [];
       entries.forEach(entry => addEntryToDOM(entry));
     };
 
@@ -113,7 +114,7 @@
       if (name && team) {
         const entry = { name, team };
         entries.push(entry);
-        localStorage.setItem('signups', JSON.stringify(entries));
+        localStorage.setItem(pageKey, JSON.stringify(entries));
         addEntryToDOM(entry);
         form.reset();
       }
@@ -129,7 +130,7 @@
       const password = prompt("Enter admin password to reset:");
       if (password === "admin123") {
         if (confirm("Are you sure you want to clear all sign-ups?")) {
-          localStorage.removeItem('signups');
+          localStorage.removeItem(pageKey);
           signupList.innerHTML = '';
           entries = [];
           alert("Log cleared.");
