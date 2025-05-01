@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Opening Tournament Sign-up</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #000000;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    #banner {
+      background-color: #000000;
+      color: red;
+      font-size: 72px;
+      text-align: center;
+      padding: 30px 0;
+      width: 100%;
+      font-family: 'Brush Script MT', cursive;
+      box-sizing: border-box;
+      margin-bottom: 30px;
+      letter-spacing: 2px;
+    }
+
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 500px;
+      color: #000;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2196F3;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    ol {
+      padding: 20px;
+      border-radius: 8px;
+      background: #f9f9f9;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    li {
+      margin-bottom: 10px;
+      border-left: 5px solid #2196F3;
+      padding-left: 10px;
+    }
+
+    #resetButton {
+      background-color: #f44336;
+      color: white;
+    }
+
+    button[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="banner">McKarr's Slo-Pitch League</div>
+
+  <div class="container">
+    <h2>Opening Tournament Sign-up</h2>
+    <form id="signupForm">
+      <input type="text" id="name" placeholder="Your Name" required />
+      <input type="text" id="team" placeholder="Team Name" required />
+      <button type="submit">Sign Up</button>
+      <button type="button" id="resetButton" onclick="resetList()">Reset List</button>
+    </form>
+
+    <ol id="signupList"></ol>
+  </div>
+
+  <script>
+    const form = document.getElementById('signupForm');
+    const signupList = document.getElementById('signupList');
+
+    let entries = [];
+
+    window.onload = () => {
+      entries = JSON.parse(localStorage.getItem('signups')) || [];
+      entries.forEach(entry => addEntryToDOM(entry));
+    };
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const name = document.getElement

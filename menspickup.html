@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Men's Pick-up Monday</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #000000;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Banner Styles */
+    #banner {
+      background-color: #000000;
+      color: red;
+      font-size: 72px; /* Doubled size */
+      text-align: center;
+      padding: 30px 0;
+      width: 100%;
+      font-family: 'Brush Script MT', cursive; /* Cursive font */
+      box-sizing: border-box;
+      margin-bottom: 30px;
+      letter-spacing: 2px;
+    }
+
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 500px;
+      color: #000;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2196F3;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    ol {
+      padding: 20px;
+      border-radius: 8px;
+      background: #f9f9f9;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    li {
+      margin-bottom: 10px;
+      border-left: 5px solid #2196F3;
+      padding-left: 10px;
+    }
+
+    #resetButton, #showPhonesButton {
+      background-color: #f44336;
+      color: white;
+    }
+
+    #showPhonesButton {
+      margin-top: 10px;
+      background-color: #2196F3;
+    }
+
+    button[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Banner -->
+  <div id="banner">McKarr's Slo-Pitch League</div>
+
+  <!-- Main Form Container -->
+  <div class="container">
+    <h2>Men's Pick-up Monday</h2>
+    <form id="signupForm">
+      <input type="text" id="name" placeholder="Your Name" required />
+      <input type="tel" id="phone" placeholder="Phone Number" required />
+      <button type="submit">Sign Up</button>
+      <button type="button" id="resetButton" onclick="resetList()">Reset List</button>
+      <button type="button" id="showPhonesButton" style="display:none;" onclick="promptForAdminLogin()">Show Phone Numbers</button>
+    </form>
+
+    <ol id="signupList"></ol>
+  </div>
+
+  <script>
+    const form = document.getElementById('signupForm');
+    const signupList = document.getElementById('signupList');
+    const showPhonesButton = document.getElementById('showPhonesButton');
+
+    let entries = [];
+
+    window.onload = () => {
+      entries = JSON.parse(localStorage.getItem('signups')) || [];
+      entries.forEach(entry => addEntryToDOM(entry, false));
+
+      showPhonesButton.style.display = "inline-block";
+    };
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+
+      if (name && phone) {
+        const entry = { name, phone };
+        entries.push(entry);
+        localStorage.setItem('signups', JSON.stringify(entries));
+        addEntryToDOM(entry, false);
+        form.reset();
+      }
+    });
+
+    function addEntryToDOM(entry, showPhone) {
+      const li = document.createElement('li');
+      li.textContent = showPhone
+        ? `${entry.name} (Phone: ${entry.phone})`
+        : `${entry.name}`;
+      signupList.appendChild(li);
+    }
+
+    function promptForAdminLogin() {
+      const password = prompt("Enter admin password to view phone numbers:");
+      if (password === "admin123") {
+        revealPhones();
+      } else {
+        alert("Incorrect password. Access denied.");
+      }
+    }
+
+    function revealPhones() {
+      signupList.innerHTML = '';
+      entries.forEach(entry => addEntryToDOM(entry, true));
+    }
+
+    function resetList() {
+      const password = prompt("Enter admin password to reset:");
+      if (password === "admin123") {
+        if (confirm("Are you sure you want to clear all sign-ups?")) {
+          localStorage.removeItem('signups');
+          signupList.innerHTML = '';
+          entries = [];
+          alert("Log cleared.");
+        }
+      } else {
+        alert("Incorrect password. Access denied.");
+      }
+    }
+  </script>
+
+</body>
+</html>
