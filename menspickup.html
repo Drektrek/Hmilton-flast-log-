@@ -107,13 +107,13 @@
     const form = document.getElementById('signupForm');
     const signupList = document.getElementById('signupList');
     const showPhonesButton = document.getElementById('showPhonesButton');
+    const pageKey = 'signups_menspickup'; // Unique key for this page
 
     let entries = [];
 
     window.onload = () => {
-      entries = JSON.parse(localStorage.getItem('signups')) || [];
+      entries = JSON.parse(localStorage.getItem(pageKey)) || [];
       entries.forEach(entry => addEntryToDOM(entry, false));
-
       showPhonesButton.style.display = "inline-block";
     };
 
@@ -125,7 +125,7 @@
       if (name && phone) {
         const entry = { name, phone };
         entries.push(entry);
-        localStorage.setItem('signups', JSON.stringify(entries));
+        localStorage.setItem(pageKey, JSON.stringify(entries)); // Uses pageKey
         addEntryToDOM(entry, false);
         form.reset();
       }
@@ -157,7 +157,7 @@
       const password = prompt("Enter admin password to reset:");
       if (password === "admin123") {
         if (confirm("Are you sure you want to clear all sign-ups?")) {
-          localStorage.removeItem('signups');
+          localStorage.removeItem(pageKey); // Uses pageKey
           signupList.innerHTML = '';
           entries = [];
           alert("Log cleared.");
