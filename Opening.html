@@ -100,11 +100,49 @@
 
     let entries = [];
 
+    // Unique key for this page's localStorage
+    const localStorageKey = 'signups_opening';
+
     window.onload = () => {
-      entries = JSON.parse(localStorage.getItem('signups')) || [];
+      // Retrieve saved sign-ups from localStorage using unique key
+      entries = JSON.parse(localStorage.getItem(localStorageKey)) || [];
       entries.forEach(entry => addEntryToDOM(entry));
     };
 
     form.addEventListener('submit', e => {
       e.preventDefault();
-      const name = document.getElement
+      const name = document.getElementById('name').value.trim();
+      const team = document.getElementById('team').value.trim();
+
+      if (name && team) {
+        const entry = { name, team };
+        entries.push(entry);
+        localStorage.setItem(localStorageKey, JSON.stringify(entries)); // Save to localStorage with unique key
+        addEntryToDOM(entry);
+        form.reset();
+      }
+    });
+
+    function addEntryToDOM(entry) {
+      const li = document.createElement('li');
+      li.textContent = `${entry.name} (Team: ${entry.team})`;
+      signupList.appendChild(li);
+    }
+
+    function resetList() {
+      const password = prompt("Enter admin password to reset:");
+      if (password === "admin123") {
+        if (confirm("Are you sure you want to clear all sign-ups?")) {
+          localStorage.removeItem(localStorageKey); // Clear the unique localStorage entry
+          signupList.innerHTML = '';
+          entries = [];
+          alert("Log cleared.");
+        }
+      } else {
+        alert("Incorrect password. Access denied.");
+      }
+    }
+  </script>
+
+</body>
+</html>
